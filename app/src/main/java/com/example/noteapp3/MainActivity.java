@@ -13,6 +13,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
 
     EditText input;
     ImageView enter;
+    EditText search;
+    ImageView searchButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
         input = findViewById(R.id.input);
         enter = findViewById(R.id.add);
+        search = findViewById(R.id.searchField);
+        searchButton = findViewById(R.id.search_icon);
 
         items = new ArrayList<>();
         items.add("Apples");
@@ -77,13 +83,24 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this, "Removed: " + items.get(i), Toast.LENGTH_SHORT).show(); //display item at index i
-                items.remove(i); //remove item at index i
-                adapter.notifyDataSetChanged(); //refresh list
-                return true;
+            public void onClick(View view) {
+                String text = search.getText().toString().trim();
+                ListIterator<String> iterator = items.listIterator();
+                while (iterator.hasNext()) {
+                    String item = iterator.next(); //
+                    items.set(iterator.previousIndex(), item.toLowerCase(Locale.ROOT)); //set item to lowercase
+                }
+                if (!text.isEmpty()) {
+                    if (items.contains(text)) {
+                        Toast.makeText(MainActivity.this, "Found: " + text, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "Not Found: " + text, Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Enter some text", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
