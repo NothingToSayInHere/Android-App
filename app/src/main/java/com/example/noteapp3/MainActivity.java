@@ -77,5 +77,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, "Removed: " + items.get(i), Toast.LENGTH_SHORT).show(); //display item at index i
+                items.remove(i); //remove item at index i
+                adapter.notifyDataSetChanged(); //refresh list
+                return true;
+            }
+        });
+
     }
 }
