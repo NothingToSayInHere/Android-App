@@ -36,7 +36,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { //i = index
                 String name = items.get(i);
-                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show(); //Toast.LENGTH_SHORT = 2 sec
+            }
+        });
+
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(MainActivity.this, "Removed: " + items.get(i), Toast.LENGTH_LONG).show(); //display item at index i
+                items.remove(i); //remove item at index i
+                adapter.notifyDataSetChanged(); //refresh list
+                return true;
             }
         });
 
