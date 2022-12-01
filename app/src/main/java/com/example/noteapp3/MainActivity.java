@@ -32,13 +32,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listView = findViewById(R.id.listView);
-
         input = findViewById(R.id.input);
         enter = findViewById(R.id.add);
         search = findViewById(R.id.searchField);
         searchButton = findViewById(R.id.search_icon);
 
+        listView = findViewById(R.id.listView);
         items = new ArrayList<>();
         items.add("Apples");
         items.add("Banana");
@@ -49,16 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) { //i = index
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = items.get(i);
-                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show(); //Toast.LENGTH_SHORT = 2 sec
+                makeToast(name);
             }
         });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(MainActivity.this, "Removed: " + items.get(i), Toast.LENGTH_LONG).show(); //display item at index i
+                makeToast("Removed: " + items.get(i)); //display item at index i (adica cel pe care am apasat)
                 items.remove(i); //remove item at index i
                 adapter.notifyDataSetChanged(); //refresh list
                 return true;
@@ -76,9 +75,9 @@ public class MainActivity extends AppCompatActivity {
                     items.add(text); //add text to items
                     adapter.notifyDataSetChanged(); //refresh list
                     input.setText("");// clear input
-                    Toast.makeText(MainActivity.this, "Added: " + text, Toast.LENGTH_SHORT).show();
+                    makeToast("Added " + text);// display toast
                 } else { //if text is empty
-                    Toast.makeText(MainActivity.this, "Enter some text", Toast.LENGTH_SHORT).show();
+                    makeToast("Please enter something"); //display toast
                 }
             }
         });
@@ -94,15 +93,27 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!text.isEmpty()) {
                     if (items.contains(text)) {
-                        Toast.makeText(MainActivity.this, "Found: " + text, Toast.LENGTH_SHORT).show();
+                        makeToast("Found " + text);
                     } else {
-                        Toast.makeText(MainActivity.this, "Not Found: " + text, Toast.LENGTH_SHORT).show();
+                        makeToast("Not found " + text);
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Enter some text", Toast.LENGTH_SHORT).show();
+                    makeToast("Please enter something");
                 }
+                search.setText("");
             }
         });
 
     }
+
+    Toast t;
+
+    public void makeToast(String s) {
+        if (t != null) {
+            t.cancel();
+        }
+        t = Toast.makeText(this, s, Toast.LENGTH_SHORT);
+        t.show();
+    }
+
 }
