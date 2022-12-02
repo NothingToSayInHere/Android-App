@@ -12,7 +12,12 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.ListIterator;
 import java.util.Locale;
 
@@ -50,14 +55,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String name = items.get(i);
-                makeToast(name);
+                Toast.makeText(MainActivity.this, name, Toast.LENGTH_SHORT).show();
             }
         });
 
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                makeToast("Removed: " + items.get(i)); //display item at index i (adica cel pe care am apasat)
+                Toast.makeText(MainActivity.this, "Removed: " + items.get(i), Toast.LENGTH_SHORT).show(); //display item at index i (adica cel pe care am apasat)
                 items.remove(i); //remove item at index i
                 adapter.notifyDataSetChanged(); //refresh list
                 return true;
@@ -75,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
                     items.add(text); //add text to items
                     adapter.notifyDataSetChanged(); //refresh list
                     input.setText("");// clear input
-                    makeToast("Added " + text);// display toast
+                    Toast.makeText(MainActivity.this, "Added: " + text, Toast.LENGTH_SHORT).show(); //display added item
                 } else { //if text is empty
-                    makeToast("Please enter something"); //display toast
+                    Toast toast = Toast.makeText(MainActivity.this, "Enter something", Toast.LENGTH_SHORT);
                 }
             }
         });
@@ -93,27 +98,55 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (!text.isEmpty()) {
                     if (items.contains(text)) {
-                        makeToast("Found " + text);
+                        Toast.makeText(MainActivity.this, "Found: " + text, Toast.LENGTH_SHORT).show();
                     } else {
-                        makeToast("Not found " + text);
+                        Toast.makeText(MainActivity.this, "Not found", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    makeToast("Please enter something");
+                    Toast toast = Toast.makeText(MainActivity.this, "Enter something", Toast.LENGTH_SHORT);
                 }
                 search.setText("");
             }
         });
 
+        loadContent();
+
     }
 
-    Toast t;
-
-    public void makeToast(String s) {
-        if (t != null) {
-            t.cancel();
+    @Override
+    protected void onDestroy() {
+        File path = getApplicationContext().getFilesDir();
+        try {
+            FileOutputStream writer = new FileOutputStream(new File(path, "data.txt")); //create file
+            writer.write(items.toString().getBytes());  //write items to file
+            writer.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        t = Toast.makeText(this, s, Toast.LENGTH_SHORT);
-        t.show();
+        super.onDestroy();
+    }
+
+    public void loadContent() {
+        File path = getApplicationContext().getFilesDir();
+        File readFrom = new File(path, "data.txt");
+        byte[] content = new byte[(int) readFrom.length()]; //create byte array with size of file length
+        try {
+            FileInputStream fis = new FileInputStream(readFrom); //reads from here
+            fis.read(content); //and writes in content
+
+            String s = new String(content); //convert byte array to string
+            s = s.replace("[", ""); //remove [ from string
+            s = s.replace("]", ""); //remove ] from string
+            String split[] = s.split(", "); //remove ", " from string
+            items = new ArrayList<>(Arrays.asList(split)); //convert array to arraylist
+            adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items); //create adapter
+            listView.setAdapter(adapter); //set adapter to listview
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }
