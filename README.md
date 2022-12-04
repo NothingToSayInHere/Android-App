@@ -23,3 +23,6 @@ Completed requirements:
 - search in note - [x]
 
 - [x] add note
+- [ ] edit note
+- [x] delete note
+- [x] search in notes
