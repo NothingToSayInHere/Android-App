@@ -21,3 +21,5 @@ Completed requirements:
 - edit note      - [ ]
 - delete note    - [x]
 - search in note - [x]
+
+- [x] add note
