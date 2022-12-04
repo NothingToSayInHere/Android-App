@@ -15,3 +15,9 @@ Requirements:
 - as a user I want to be able to edit a note so that I can alter it if needed
 - as a user I want to be able to delete a note so that it is no longer stored
 - as a user I want to be able to search through my list of notes so that I can find the one I am looking for
+
+Completed requirements:
+add note       - [x]
+edit note      - [ ]
+delete note    - [x]
+search in note - [x]
