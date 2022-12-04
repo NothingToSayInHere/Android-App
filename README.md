@@ -17,7 +17,7 @@ Requirements:
 - as a user I want to be able to search through my list of notes so that I can find the one I am looking for
 
 Completed requirements:
-add note       - [x]
-edit note      - [ ]
-delete note    - [x]
-search in note - [x]
+- add note       - [x]
+- edit note      - [ ]
+- delete note    - [x]
+- search in note - [x]
